@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <link href="Stylesheet.css" rel="stylesheet" />
+    <title>Debate Visualizer</title>
+</head>
+<body class="body">
+    <div id="body-sub">
+        
+        <canvas id="myCanvas"></canvas>
+
+        <div class="centered-container"/>
+            <h1 class="title"><i>Debate Visualizer</i></h1>
+            <div>
+                <h3>CASE: Hobbes NC</h3>
+            	<button><a href="dictionary.html">Dictionary</a></button>
+            </div>
+        </div>
+        
+
+        <div class="centered-container bubble" id="backbox">
+        	<div class="bubble-box" id="box1" tabindex="1">
+            <h5 draggable="true" ondrop="drop(ev)" onclick="nodeClick()" onkeypress="nodeKey(ev)" class="noselect">Testing</h5>
+            </div>
+            <div class="bubble-box" id="box2" tabindex="1">
+            <h5 draggable="true" ondrop="drop(ev)" onclick="nodeClick()" onkeypress="nodeKey(ev)" class="noselect">d</h5>
+        	</div>
+        </div>
+        
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
