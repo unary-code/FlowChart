@@ -27,7 +27,9 @@ frmwrkBubble.addEventListener('click', backBoxClick);
 let frmwrkBoxList= document.querySelectorAll(".bubble-box");
 //querySelectorAll returns a NodeList of all elements with class 'bubble-box'
 
-let nodeListPos = [{x: 300, y: 50}, {x: 300, y:50}];
+let nodeList = [{x: 300, y: 50, text: 'hi Im box1'}, {x: 300, y:150, text: 'hey Im box2'}];
+//let nodeList = [{x: 300, y: 50, text: 'hi Im box1'}];
+
 let edgeList = [];
 //format for edge object is {sInd: 0, eInd: 3}
 
@@ -100,10 +102,69 @@ const test = document.querySelector("#backbox");
 
 console.log("script js running");
 
+//document.querySelector("#backbox #box2 textarea").focus();
+
+init();
+
+function init() {
+	console.log("init() run");
+
+	//Using initial value for nodeList, create node elements class .bubble-box with set h5 elements as child
+	n=0;
+	generateNodes(nodeList);
+}
+
+function generateNodes(nodeList) {
+	//Given a general list of nodes (each node has the properties x, y, text, and others)
+	//add the nodes at those positions with those properties to the DOM.
+
+	nodeList.forEach((node) => {
+console.log(node.x+" "+node.y);
+
+		var box = document.createElement("div");
+		box.className = "bubble-box";
+		n++;
+		
+		box.id = "box"+n;
+
+		const backBox = document.querySelector("#backbox");
+
+		const newLeft = node.x-backBoxOffset.left;
+		const newTop = node.y-backBoxOffset.top;
+		//newLeft and newTop are defined differently here than they are in the other function
+
+		box.style.left = (newLeft)+"px";
+		box.style.top = (newTop)+"px";
+		box.setAttribute("tabindex", "1");
+
+		var boxInside = document.createElement("h5");
+		boxInside.innerHTML = node.text;
+		boxInside.setAttribute("draggable", "true");
+		boxInside.setAttribute("ondrop", "drop(ev)");
+		boxInside.setAttribute("onclick", "nodeClick()");
+		boxInside.className = "noselect";
+
+		box.appendChild(boxInside);
+
+		backBox.appendChild(box);
+
+		//nodeList.push({x: node.x, y: node.y, text: boxInside.innerHTML});
+
+	});
+
+	/*
+	for (const node in nodeList) {
+		
+	}
+	*/
+
+	update();
+}
+
 function update() {
 	console.log("update() run");
 
-	console.log(nodeListPos);
+	console.log(nodeList);
 
 	frmwrkBubble= document.querySelector(".bubble");
 	backBoxOffset = frmwrkBubble.getBoundingClientRect();
@@ -135,8 +196,8 @@ function update() {
 
 	for (let i=0; i<edgeLen; i++) {
 		const edge = edgeList[i];
-		const sPos = nodeListPos[edge.sInd];
-		const ePos = nodeListPos[edge.eInd];
+		const sPos = nodeList[edge.sInd];
+		const ePos = nodeList[edge.eInd];
 		console.log("sPos, ePos: "+sPos+","+ePos);
 
 		ctx.beginPath();
@@ -246,10 +307,10 @@ function addEdge(sIdStr, eIdStr) {
 	//eId = ending ID
 
 	//later add in boolean variable to determine if the edge will be directional or bidirectional
-	//rely on nodeListPos array to get left and top position of the 2 elements based on their IDs
+	//rely on nodeList array to get left and top position of the 2 elements based on their IDs
 	//we can also maybe find their positions through other ways such as window.getComputedStyle(ele)
 
-	const nodeListLen = nodeListPos.length;
+	const nodeListLen = nodeList.length;
 
 	const poss = indCheck(sId-1, nodeListLen) && indCheck(eId-1, nodeListLen);
 
@@ -258,10 +319,10 @@ function addEdge(sIdStr, eIdStr) {
 		return;
 	}
 
-	console.log("nodeListPos = " + nodeListPos[0]);
+	console.log("nodeList= " + nodeList);
 
-	const sPos = nodeListPos[sId-1];
-	const ePos = nodeListPos[eId-1];
+	const sPos = nodeList[sId-1];
+	const ePos = nodeList[eId-1];
 
 	console.log("sPos x:"+ sPos.x + " y:" + sPos.y + " ePos x: " + ePos.x + " y:" + ePos.y);
 	ctx.beginPath();
@@ -280,6 +341,7 @@ function addEdge(sIdStr, eIdStr) {
 
 //let prevClassName;
 function dragStart(event) {
+	//event.preventDefault();
 	console.log('start');
 	const thisStyle = window.getComputedStyle(this);
 	//prevClassName = this.className;
@@ -333,7 +395,8 @@ function drop(e) {
 	let thisIdStr = data[0];
 	let thisId = parseInt(thisIdStr.substring(3), 10);
 	console.log("BOX with ID=" + thisIdStr + " changed position to left:"+newLeft+", top:"+newTop);
-	nodeListPos[thisId-1] = {x: e.clientX, y: e.clientY};
+	nodeList[thisId-1].x = e.clientX;
+	nodeList[thisId-1].y = e.clientY;
 
 	//change the dropped box element's position
 
@@ -410,7 +473,7 @@ function spawnBox(ev) {
 
 	backBox.appendChild(box);
 
-	nodeListPos.push({x: ev.clientX, y: ev.clientY});
+	nodeList.push({x: ev.clientX, y: ev.clientY, text: boxInside.innerHTML});
 
 	update();
 }
@@ -419,4 +482,3 @@ function nodeClick() {
 	console.log("nodeClick() run");
 	//nodeClicked = true;
 }
-

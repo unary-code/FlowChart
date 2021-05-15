@@ -51,12 +51,23 @@ body {
 	transform: translateX(-50%);
 	cursor: move;
 }
+
+.bubble .bubble-box {
+	background-color: #ff00ff;
+	margin: 10px 10px 10px 10px;
+}
+
 .bubble .bubble-box h5 {
 	display: inline-block;
-	background-color: #ff0000;
+	background-color: #ff55ff;
 	padding: 10px 15px;
 	border-radius: 5px 5px;
 }
+
+.bubble .bubble-box textarea {
+	border: 2px solid #ff00ff;
+}
+
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none;   /* Chrome/Safari/Opera */
